@@ -10,7 +10,8 @@ import color
 
 
 class Scene:
-
+    ''' it’s a room … more or less
+    '''
     def __init__(self, file_path):
         scene_xml = ET.parse(file_path)
         scene = scene_xml.getroot()
@@ -56,3 +57,15 @@ class Scene:
                                       r.direction /
                                       (lr.length * r.direction.length) **
                                       hit.material.phong_specular_exponent)
+
+    def GetMaterialByName(strName)
+        '''
+            :param str strName: name of the wanted material
+            :returns: a material with strName as name or non if not found
+            :rtype: Material
+        '''
+            for m in self.materials:
+                if m.Name == strName:
+                    return m
+            return non
+        }
