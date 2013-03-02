@@ -5,6 +5,7 @@ import materials
 import lights
 import camera
 import objects
+import ray
 
 import color
 
@@ -65,10 +66,21 @@ class Scene:
                                       (lr.length * r.direction.length) **
                                       hit.material.phong_specular_exponent)
 
-    def getMaterialByName(strName)
+            if recursion_level < 0:
+                return new_color
+
+            r2 = ray.Ray(point + 0.01 * normal, -(2 * (normal * r.direction) *
+                                                  normal - r.direction))
+            new_color += color.dot(hit.material.reflection_color,
+                                   self.rend_ray(r2, recursion_level - 1))
+            return new_color
+        else:
+            return self.background
+
+    def getMaterialByName(self, strName):
         '''
             :param str strName: name of the wanted material
             :returns: a material with strName as name or non if not found
             :rtype: Material
         '''
-            return self.materials.findall(strName)
+        return self.materials.findall(strName)
