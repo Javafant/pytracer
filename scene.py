@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from PIL import Image
 
 import vector
 import materials
@@ -77,10 +78,28 @@ class Scene:
         else:
             return self.background
 
-    def getMaterialByName(self, strName):
-        '''
-            :param str strName: name of the wanted material
-            :returns: a material with strName as name or non if not found
-            :rtype: Material
-        '''
-        return self.materials.findall(strName)
+    def render(self, v_res):
+        h_res = int(camera.aspect_ratio * v_res)
+        outfile = Image.new('RGB', h_res, v_res)
+
+        for x in range(0, h_res):
+            for y in range(0, v_res):
+                pixel = (self.camera.virtual_screen_top_left_corner +
+                         x /
+                         float(h_res) *
+                         -self.camera.view_left *
+                         self.camera.virtual_screen_width)
+                direction = pixel - self.camera.position
+                outfile[x, y] = self.send_ray(ray.Ray(pixel,
+                                                      direction)).get_color()
+        return outfile
+
+
+
+    #def get_material_by_name(self, strName):
+        #'''
+            #:param str strName: name of the wanted material
+            #:returns: a material with strName as name or non if not found
+            #:rtype: Material
+        #'''
+        #return self.materials.findall(strName)
