@@ -22,18 +22,23 @@ class Scene:
         self.camera = camera.parse(scene.findall('camera'))
 
     def send_ray(self, r, recursion_level=4):
+        ''' sends a ray t
+            :param Ray r: starpoint and direction
+            :pram int recursion_level: how many light recursion
+        '''
         t_min = float('inf')
-        for o in self.objects:
+        for o in self.objects:#find the closest object
             t, tmp_point, tmp_normal = o.intersects(r)
             if t < t_min:
                 t_min = t
                 hit = o
                 point = tmp_point
-                normal = tmp_normal
+                normal = tmp_normal#normalvector
+
         if hit:
-            new_color = hit.material.ambient_color * self.ambient_light
-            for ls in self.lights:
-                if ls.is_visible_from_point(point, normal, self.objects):
+            new_color = hit.material.ambient_color * self.ambient_light#a tiny base glow of everything
+            for ls in self.lights:#check all ligths
+                if ls.is_visible_from_point(point, normal, self.objects):#if the light is visibile from the point the ray hit
                     if normal * ls.light_direction(point) > 0:
                         new_color += color.dot(hit.material.diffuse_color,
                                                ls.get_color(point) *
