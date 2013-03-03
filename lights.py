@@ -104,9 +104,13 @@ class OmniLightSource(LightSource):
 
     def is_visibible_from_point(self, point, normal, objects):
         for o in objects:
-            tmp, tmp_point, tmp_nomal = o.intersects(ray.Ray(point + 0.01 * normal,
-                                                             self._position - point,
-                                                             (point - self._position).length))
+            tmp, tmp_point, tmp_nomal = o.intersects(ray.Ray(point +
+                                                             0.01 * normal,
+                                                             self._position -
+                                                             point,
+                                                             (point -
+                                                              self._position)
+                                                             .length))
             if tmp < float('inf'):
                 return False
         return True
