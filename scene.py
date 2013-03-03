@@ -20,9 +20,8 @@ class Scene:
         self.materials = materials.parse(scene.find('materials'))
         self.objects = objects.parse(scene.find('objects'))
         self.lights = lights.parse(scene.find('lights'))
-        self.background = color.RaytracerColor(0,0,0)
-        #parse it later
-        #self.ambient_light = color.parse(scene.findall('ambient'))
+        self.background = color.parse(scene.find('background').find('color'))
+        self.ambient_light = color.parse(scene.find('ambient').find('color'))
         self.camera = camera.Camera(scene.find('camera'))
 
     def send_ray(self, r, recursion_level=4):
