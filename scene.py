@@ -100,7 +100,6 @@ class Scene:
             :returns: a material with strName as name or non if not found
             :rtype: Material  or None if not found
         '''
-        print self.materials
         for m in self.materials:
             if m.name == strName:
                 return m
