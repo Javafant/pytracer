@@ -18,7 +18,7 @@ class Scene:
         scene_xml = ET.parse(file_path)
         scene = scene_xml.getroot()
         self.materials = materials.parse(scene.find('materials'))
-        self.objects = objects.parse(scene.find('objects'))
+        self.objects = objects.parse(scene.find('objects'), self)
         self.lights = lights.parse(scene.find('lights'))
         self.background = color.RaytracerColor(0,0,0)
         #parse it later

@@ -2,22 +2,22 @@ import vector
 import math
 
 
-def parse(obj_node):
+def parse(obj_node, scene):
     objects = []
     for obj in obj_node:
         if obj.tag == 'sphere':
-            objects.add(RaytracerSphere(obj))
+            objects.append(RaytracerSphere(obj, scene))
 
 
-class RaytracerObject:
+class RaytracerObject(object):
     def __init__(self, node, scene):
-        self.name = node.attrib('name')
-        self.material = scene.get_material_by_name(node.attrib['material'])
+        self.name = node.get('name')
+        self.material = scene.get_material_by_name(node.get('material'))
 
 
 class RaytracerSphere(RaytracerObject):
     def __init__(self, node, scene):
-        super(RaytracerSphere, self).__init__(node, scene)
+        super(RaytracerSphere,self).__init__(node, scene)
         self._radius = float(node.attrib['radius'])
         self._center = vector.parse(node[0])
 
