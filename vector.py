@@ -33,7 +33,6 @@ class Vector3D:
     def __rmul__(self, a):
         return self * a
 
-
     def __str__(self):
         return "Vector3D(%g,%g,%g)" % (self.x, self.y, self.z)
 
