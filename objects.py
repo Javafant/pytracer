@@ -31,7 +31,7 @@ class RaytracerSphere(RaytracerObject):
         y = r.start - self._center
         c = vector.dot(y, y) - self._radius * self._radius
         b = vector.dot(r.direction, y)
-        if b*b - c < 0:
+        if b * b - c < 0:
             return float('inf'), None, None
         t1 = -b + math.sqrt(b * b - c)
         t2 = -b - math.sqrt(b * b - c)

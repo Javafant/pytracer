@@ -43,7 +43,7 @@ class Scene:
                 #normalvector
 
         if hit is not None:
-            new_color = hit.material.ambient_color * self.ambient_light
+            new_color = color.dot(hit.material.ambient_color, self.ambient_light)
             #a tiny base glow of everything
             for ls in self.lights:
             #check all ligths

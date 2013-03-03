@@ -73,8 +73,7 @@ class Camera:
 
     @property
     def virtual_screen_top_left_corner(self):
-        mittelpunkt = (self._position + vector.Vector3D(self._near_clipping, self._near_clipping, self._near_clipping) +
-                       self.viewing_direction)
+        mittelpunkt = self._position + self.viewing_direction * self.near_clipping
         return (mittelpunkt +
                 self.virtual_screen_height / 2.0 * self.view_up.normalized +
                 self.virtual_screen_width / 2.0* self.view_left.normalized)
