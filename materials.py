@@ -24,6 +24,7 @@ class Material:
             elif c.tag == 'specular':
                 self.specular_color = color.parse(c[0])
                 self.specular_color *= float(c.get('factor'))
+                self.phong_specular_exponent = float(c.get('exponent'))
             elif c.tag == 'reflection':
                 self.reflection_color = color.parse(c[0])
                 self.reflection_color *= float(c.get('factor'))

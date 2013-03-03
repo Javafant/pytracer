@@ -49,24 +49,23 @@ class Scene:
             #check all ligths
                 if ls.is_visible_from_point(point, normal, self.objects):
                 #if the light is visibile from the point the ray hit
-                    if normal * ls.light_direction(point) > 0:
+                    light_direction = vector.dot(normal, ls.light_direction(point))
+                    if light_direction > 0:
                     #if there is still light
-                        sth = vector.dot(normal, ls.light_direction(point))
-                        new_color += color.dot(hit.material.diffuse_color,
-                                               ls.get_color(point) *
-                                               sth)
+                        new_color += (color.dot(hit.material.diffuse_color,
+                                               ls.get_color(point)) *
+                                               light_direction)
 
                         lr = -(2 * vector.dot(normal,
-                                              ls.light_direction(point) *
+                                              ls.light_direction(point)) *
                                               normal -
-                                              ls.light_direction(point)))
+                                              ls.light_direction(point))
 
-                        new_color += (hit.material.specular_color *
-                                      ls.get_color(point) *
-                                      lr *
-                                      r.direction /
-                                      (lr.length * r.direction.length) **
-                                      hit.material.phong_specular_exponent)
+                        new_color += (color.dot(hit.material.specular_color,
+                                      ls.get_color(point)) *
+                                      (vector.dot(lr, r.direction) /
+                                      (lr.length * r.direction.length)) **
+                                       hit.material.phong_specular_exponent)
 
             if recursion_level < 0:
                 return new_color
