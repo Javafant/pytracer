@@ -1,5 +1,6 @@
 import color
 
+
 def parse(mat_node):
     materials = []
     for node in mat_node:

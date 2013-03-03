@@ -22,7 +22,7 @@ class Scene:
         self.lights = lights.parse(scene.findall('lights'))
         self.background = color.parse(scene.findall('background'))
         self.ambient_light = color.parse(scene.findall('ambient'))
-        self.camera = Camera(scene.findall('camera'))
+        self.camera = camera.Camera(scene.findall('camera'))
 
     def send_ray(self, r, recursion_level=4):
     #does it make sense to set the recursion level per ray?
