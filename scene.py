@@ -71,10 +71,10 @@ class Scene:
             if recursion_level < 0:
                 return new_color
 
-            r2 = ray.Ray(point + 0.01 * normal, -(2 * (normal * r.direction) *
+            r2 = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, r.direction)) *
                                                   normal - r.direction))
             new_color += color.dot(hit.material.reflection_color,
-                                   self.rend_ray(r2, recursion_level - 1))
+                                   self.send_ray(r2, recursion_level - 1))
             return new_color
         else:
             return self.background

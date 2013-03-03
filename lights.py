@@ -104,7 +104,7 @@ class OmniLightSource(LightSource):
                 "', position = " + self._position +
                 ", color = " + self._color)
 
-    def is_visibible_from_point(self, point, normal, objects):
+    def is_visible_from_point(self, point, normal, objects):
         for o in objects:
             tmp, tmp_point, tmp_nomal = o.intersects(ray.Ray(point +
                                                              0.01 * normal,
