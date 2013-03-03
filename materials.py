@@ -15,13 +15,13 @@ class Material:
         for c in node:
             if c.tag == 'ambient':
                 self.ambient_color = color.parse(c[0])
-                self.ambient_color *= float(c.attrib['factor'])
+                self.ambient_color *= float(c.get('factor'))
             elif c.tag == 'diffuse':
                 self.diffuse_color = color.parse(c[0])
-                self.diffuse_color *= float(c.attrib['factor'])
+                self.diffuse_color *= float(c.get('factor'))
             elif c.tag == 'specular':
                 self.specular_color = color.parse(c[0])
-                self.specular_color *= float(c.attrib['factor'])
+                self.specular_color *= float(c.get('factor'))
             elif c.tag == 'reflection':
                 self.reflection_color = color.parse(c[0])
-                self.reflection_color *= float(c.attrib['factor'])
+                self.reflection_color *= float(c.get('factor'))

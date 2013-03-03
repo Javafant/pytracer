@@ -12,21 +12,21 @@ class Camera:
         self._aspect_ratio = 1.0
         for node in cam_node:
             if node.tag == 'position':
-                self._position = vector.Vector3D(float(node[0].attrib['x']),
-                                                 float(node[0].attrib['y']),
-                                                 float(node[0].attrib['z']))
+                self._position = vector.Vector3D(float(node[0].get('x')),
+                                                 float(node[0].get('y'),
+                                                 float(node[0].get('z'))
             elif node.tag == 'lookat':
-                self._target = vector.Vector3D(float(node[0].attrib['x']),
-                                               float(node[0].attrib['y']),
-                                               float(node[0].attrib['z']))
+                self._target = vector.Vector3D(float(node[0].get('x'),
+                                               float(node[0].get('y'),
+                                               float(node[0].get('z'))
             elif node.tag == 'upvector':
-                self._up_vector = vector.Vector3D(float(node[0].attrib['x']),
-                                                  float(node[0].attrib['y']),
-                                                  float(node[0].attrib['z']))
+                self._up_vector = vector.Vector3D(float(node[0].get('x')),
+                                                  float(node[0].get('y')),
+                                                  float(node[0].get('z')))
             elif node.tag == 'options':
-                self._near_clipping = float(node.attrib['nearclipping'])
-                self._viewing_angle = float(node.attrib['fov'])
-                self._aspect_ratio = float(node.attrib['aspectratio'])
+                self._near_clipping = float(node.get('nearclipping'))
+                self._viewing_angle = float(node.get('fov'))
+                self._aspect_ratio = float(node.get('aspectratio'))
         if self._position is None:
             raise Exception("Error in Camera(): No position defined")
         if self._target is None:
