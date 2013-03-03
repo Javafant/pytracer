@@ -64,7 +64,7 @@ class Camera:
 
     @property
     def virtual_screen_height(self):
-        return (2 * math.tan(self._viewing_angle / 360 * math.pi) *
+        return (2 * math.tan(self._viewing_angle / 360.0 * math.pi) *
                 self._near_clipping)
 
     @property
@@ -76,8 +76,8 @@ class Camera:
         mittelpunkt = (self._position + vector.Vector3D(self._near_clipping, self._near_clipping, self._near_clipping) +
                        self.viewing_direction)
         return (mittelpunkt +
-                self.virtual_screen_height / 2 * self.view_up.normalized +
-                self.virtual_screen_width / 2 * self.view_left.normalized)
+                self.virtual_screen_height / 2.0 * self.view_up.normalized +
+                self.virtual_screen_width / 2.0* self.view_left.normalized)
 
     @property
     def aspect_ratio(self):
