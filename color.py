@@ -7,9 +7,9 @@ def dot(a, b):
     return RaytracerColor(a.r * b.r, a.g * b.g, a.b * b.b)
 
 def parse(color_node):
-    return RaytracerColor(color_node.attrib['r'],
-                          color_node.attrib['g'],
-                          color_node.attrib['b'])
+    return RaytracerColor(int(color_node.attrib['r'])/255.,
+                          int(color_node.attrib['g'])/255.,
+                          int(color_node.attrib['b'])/255.)
 
 
 class RaytracerColor:
@@ -54,3 +54,10 @@ class RaytracerColor:
             :returns scalarmultiplicition of a and b
         '''
         return RaytracerColor(self.r * a, self.g * a, self.b * a)
+
+    def __imul__(self, a):
+        self._r *= a
+        self._g *= a
+        self._b *= a
+        return self
+
