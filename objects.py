@@ -17,7 +17,7 @@ class RaytracerObject(object):
 
 class RaytracerSphere(RaytracerObject):
     def __init__(self, node, scene):
-        super(RaytracerSphere,self).__init__(node, scene)
+        super(RaytracerSphere, self).__init__(node, scene)
         self._radius = float(node.get('radius'))
         self._center = vector.parse(node[0])
 
