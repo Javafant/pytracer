@@ -43,35 +43,38 @@ class Scene:
                 #normalvector
 
         if hit is not None:
-            new_color = color.dot(hit.material.ambient_color, self.ambient_light)
+            new_color = color.dot(hit.material.ambient_color,
+                                  self.ambient_light)
             #a tiny base glow of everything
             for ls in self.lights:
             #check all ligths
                 if ls.is_visible_from_point(point, normal, self.objects):
                 #if the light is visibile from the point the ray hit
-                    light_direction = vector.dot(normal, ls.light_direction(point))
+                    light_direction = vector.dot(normal,
+                                                 ls.light_direction(point))
                     if light_direction > 0:
                     #if there is still light
                         new_color += (color.dot(hit.material.diffuse_color,
-                                               ls.get_color(point)) *
-                                               light_direction)
+                                                ls.get_color(point)) *
+                                      light_direction)
 
                         lr = -(2 * vector.dot(normal,
                                               ls.light_direction(point)) *
-                                              normal -
-                                              ls.light_direction(point))
+                               normal -
+                               ls.light_direction(point))
 
                         new_color += (color.dot(hit.material.specular_color,
                                       ls.get_color(point)) *
                                       (vector.dot(lr, r.direction) /
                                       (lr.length * r.direction.length)) **
-                                       hit.material.phong_specular_exponent)
+                                      hit.material.phong_specular_exponent)
 
             if recursion_level < 0:
                 return new_color
 
-            r2 = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, r.direction)) *
-                                                  normal - r.direction))
+            r2 = ray.Ray(point + 0.01 * normal,
+                         -(2 * (vector.dot(normal, r.direction)) *
+                           normal - r.direction))
             new_color += color.dot(hit.material.reflection_color,
                                    self.send_ray(r2, recursion_level - 1))
             return new_color
@@ -97,7 +100,7 @@ class Scene:
                          self.camera.virtual_screen_height)
                 direction = pixel - self.camera.position
                 #pixbuffer.append(self.send_ray(ray.Ray(pixel,
-                #                                       direction)).get_color())
+                #                                  direction)).get_color())
                 pix[x, y] = self.send_ray(ray.Ray(pixel,
                                                   direction)).get_color()
                 #pix((x, y), self.send_ray(ray.Ray(pixel,

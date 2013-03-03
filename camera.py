@@ -44,11 +44,13 @@ class Camera:
 
     @property
     def view_up(self):
-        return (vector.cross(self.viewing_direction, self.view_left)).normalized
+        return (vector.cross(self.viewing_direction,
+                             self.view_left)).normalized
 
     @property
     def view_left(self):
-        return (vector.cross(self._up_vector, self.viewing_direction)).normalized
+        return (vector.cross(self._up_vector,
+                             self.viewing_direction)).normalized
 
     @property
     def angle(self):
@@ -73,10 +75,11 @@ class Camera:
 
     @property
     def virtual_screen_top_left_corner(self):
-        mittelpunkt = self._position + self.viewing_direction * self.near_clipping
+        mittelpunkt = (self._position + self.viewing_direction *
+                       self.near_clipping)
         return (mittelpunkt +
                 self.virtual_screen_height / 2.0 * self.view_up.normalized +
-                self.virtual_screen_width / 2.0* self.view_left.normalized)
+                self.virtual_screen_width / 2.0 * self.view_left.normalized)
 
     @property
     def aspect_ratio(self):
