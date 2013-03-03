@@ -5,6 +5,7 @@ def parse(mat_node):
     materials = []
     for node in mat_node:
         materials.append(Material(node))
+    return materials
 
 
 class Material:
@@ -12,6 +13,7 @@ class Material:
     '''
 
     def __init__(self, node):
+        self.name = node.get('name')
         for c in node:
             if c.tag == 'ambient':
                 self.ambient_color = color.parse(c[0])
