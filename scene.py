@@ -50,10 +50,10 @@ class Scene:
                 #if the light is visibile from the point the ray hit
                     if normal * ls.light_direction(point) > 0:
                     #if there is still light
+                        sth = vector.dot(normal, ls.light_direction(point))
                         new_color += color.dot(hit.material.diffuse_color,
                                                ls.get_color(point) *
-                                               vector.dot(normal,
-                                                          ls.light_direction(point)))
+                                               sth)
 
                         lr = -(2 * vector.dot(normal,
                                               ls.light_direction(point) *
@@ -94,15 +94,12 @@ class Scene:
                                                       direction)).get_color()
         return outfile
 
-
-
     def get_material_by_name(self, strName):
         '''
             :param str strName: name of the wanted material
             :returns: a material with strName as name or non if not found
             :rtype: Material  or None if not found
         '''
-        print self.materials
         for m in self.materials:
             if m.name == strName:
                 return m
