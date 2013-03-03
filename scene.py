@@ -82,20 +82,28 @@ class Scene:
     def render(self, v_res):
         h_res = int(self.camera.aspect_ratio * v_res)
         outfile = Image.new('RGB', (h_res, v_res))
-        pix = outfile.load()
+        #pix = outfile.load()
+        pixbuffer = []
 
         for x in range(0, h_res):
             for y in range(0, v_res):
                 pixel = (self.camera.virtual_screen_top_left_corner +
-                         x /
+                         float(x) /
                          float(h_res) *
                          -self.camera.view_left *
-                         self.camera.virtual_screen_width)
+                         self.camera.virtual_screen_width +
+                         float(y) /
+                         float(v_res) *
+                         -self.camera.view_up *
+                         self.camera.virtual_screen_height)
                 direction = pixel - self.camera.position
-                pix[x, y] = self.send_ray(ray.Ray(pixel,
-                                                  direction)).get_color()
+                pixbuffer.append(self.send_ray(ray.Ray(pixel,
+                                                       direction)).get_color())
+                #pix[x, y] = self.send_ray(ray.Ray(pixel,
+                #                                  direction)).get_color()
                 #pix((x, y), self.send_ray(ray.Ray(pixel,
                 #                                  direction)).get_color())
+        outfile.putdata(pixbuffer)
         return outfile
 
     def get_material_by_name(self, strName):

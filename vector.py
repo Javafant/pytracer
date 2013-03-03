@@ -25,7 +25,7 @@ class Vector3D:
 
     @property
     def normalized(self):
-        return self / self.length
+        return self * (1.0 / self.length)
 
     @property
     def length(self):
@@ -33,8 +33,8 @@ class Vector3D:
                          self.y * self.y +
                          self.z * self.z)
 
-    def __div__(self, a):
-        return Vector3D(self.x/a, self.y/a, self.z/a)
+    #def __div__(self, a):
+    #    return Vector3D(self.x/a, self.y/a, self.z/a)
 
     def __mul__(self, a):
         return Vector3D(self.x*a, self.y*a, self.z*a)
