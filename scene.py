@@ -17,12 +17,13 @@ class Scene:
     def __init__(self, file_path):
         scene_xml = ET.parse(file_path)
         scene = scene_xml.getroot()
-        self.materials = materials.parse(scene.findall('materials'))
-        self.objects = objects.parse(scene.findall('objects'))
-        self.lights = lights.parse(scene.findall('lights'))
-        self.background = color.parse(scene.findall('background'))
-        self.ambient_light = color.parse(scene.findall('ambient'))
-        self.camera = camera.Camera(scene.findall('camera'))
+        self.materials = materials.parse(scene.find('materials'))
+        self.objects = objects.parse(scene.find('objects'))
+        self.lights = lights.parse(scene.find('lights'))
+        self.background = color.RaytracerColor(0,0,0)
+        #parse it later
+        #self.ambient_light = color.parse(scene.findall('ambient'))
+        self.camera = camera.Camera(scene.find('camera'))
 
     def send_ray(self, r, recursion_level=4):
     #does it make sense to set the recursion level per ray?
