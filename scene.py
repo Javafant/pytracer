@@ -31,6 +31,7 @@ class Scene:
             :pram int recursion_level: how many light recursion
         '''
         t_min = float('inf')
+        hit = None
         for o in self.objects:
         #find the closest object
             t, tmp_point, tmp_normal = o.intersects(r)
@@ -41,7 +42,7 @@ class Scene:
                 normal = tmp_normal
                 #normalvector
 
-        if hit:
+        if hit is not None:
             new_color = hit.material.ambient_color * self.ambient_light
             #a tiny base glow of everything
             for ls in self.lights:
@@ -81,6 +82,7 @@ class Scene:
     def render(self, v_res):
         h_res = int(self.camera.aspect_ratio * v_res)
         outfile = Image.new('RGB', (h_res, v_res))
+        pix = outfile.load()
 
         for x in range(0, h_res):
             for y in range(0, v_res):
@@ -90,8 +92,10 @@ class Scene:
                          -self.camera.view_left *
                          self.camera.virtual_screen_width)
                 direction = pixel - self.camera.position
-                outfile[x, y] = self.send_ray(ray.Ray(pixel,
-                                                      direction)).get_color()
+                pix[x, y] = self.send_ray(ray.Ray(pixel,
+                                                  direction)).get_color()
+                #pix((x, y), self.send_ray(ray.Ray(pixel,
+                #                                  direction)).get_color())
         return outfile
 
     def get_material_by_name(self, strName):

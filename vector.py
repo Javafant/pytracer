@@ -33,6 +33,9 @@ class Vector3D:
                          self.y * self.y +
                          self.z * self.z)
 
+    def __div__(self, a):
+        return Vector3D(self.x/a, self.y/a, self.z/a)
+
     def __mul__(self, a):
         return Vector3D(self.x*a, self.y*a, self.z*a)
 

@@ -7,6 +7,7 @@ def parse(obj_node, scene):
     for obj in obj_node:
         if obj.tag == 'sphere':
             objects.append(RaytracerSphere(obj, scene))
+    return objects
 
 
 class RaytracerObject(object):

@@ -16,7 +16,7 @@ class Ray:
         return self._start
 
     @property
-    def dirction(self):
+    def direction(self):
         return self._direction
 
     @property
