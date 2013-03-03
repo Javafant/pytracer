@@ -63,5 +63,4 @@ class RaytracerColor:
         return self
 
     def get_color(self):
-        #return (round(self._r*255), round(self._g*255), round(self._b*255))
-        return (0, 0, 0)
+        return (int(self._r*255), int(self._g*255), int(self._b*255))
