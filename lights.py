@@ -1,11 +1,13 @@
 import color
 import ray
+import vector
 
 
 def parse(lights_node):
     lights = []
     for node in lights_node:
         lights.append(create_light_source(node))
+    return lights
 
 
 def create_light_source(light_node):
@@ -92,10 +94,10 @@ class OmniLightSource(LightSource):
         self._name = light_node.get('name')
         if light_node.find('vector3d') is None:
             raise Exception('Error in OmniLightSource(): no position defined')
-        self._position = color.Color(light_node.find('vector3d'))
+        self._position = vector.parse(light_node.find('vector3d'))
         if light_node.find('color') is None:
             raise Exception('Error in OmniLightSource(): no color defined')
-        self._color = color.Color(light_node.find('color'))
+        self._color = color.parse(light_node.find('color'))
 
     def __str__(self):
         return ("FalloffLightSource: name = '" + self._name +

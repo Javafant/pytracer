@@ -79,8 +79,8 @@ class Scene:
             return self.background
 
     def render(self, v_res):
-        h_res = int(camera.aspect_ratio * v_res)
-        outfile = Image.new('RGB', h_res, v_res)
+        h_res = int(self.camera.aspect_ratio * v_res)
+        outfile = Image.new('RGB', (h_res, v_res))
 
         for x in range(0, h_res):
             for y in range(0, v_res):
