@@ -96,10 +96,13 @@ class Scene:
 
 
 
-    #def get_material_by_name(self, strName):
-        #'''
-            #:param str strName: name of the wanted material
-            #:returns: a material with strName as name or non if not found
-            #:rtype: Material
-        #'''
-        #return self.materials.findall(strName)
+    def get_material_by_name(self, strName):
+        '''
+            :param str strName: name of the wanted material
+            :returns: a material with strName as name or non if not found
+            :rtype: Material  or None if not found
+        '''
+        for m in self.materials:
+            if m.get('name') == strName:
+                return m
+        return None
