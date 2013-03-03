@@ -22,6 +22,11 @@ class RaytracerSphere(RaytracerObject):
         self._center = vector.parse(node[0])
 
     def intersects(self, r):
+        ''' ???
+            :param Ray r:
+            :returns: ?, point, normal
+            :rtype: float, Vector3D, Vector3D
+        '''
         y = r.start - self._center
         c = vector.dot(y, y) - self._radius * self._radius
         b = vector.dot(r.direction, y)
