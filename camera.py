@@ -13,12 +13,12 @@ class Camera:
         for node in cam_node:
             if node.tag == 'position':
                 self._position = vector.Vector3D(float(node[0].get('x')),
-                                                 float(node[0].get('y'),
-                                                 float(node[0].get('z'))
+                                                 float(node[0].get('y')),
+                                                 float(node[0].get('z')))
             elif node.tag == 'lookat':
-                self._target = vector.Vector3D(float(node[0].get('x'),
-                                               float(node[0].get('y'),
-                                               float(node[0].get('z'))
+                self._target = vector.Vector3D(float(node[0].get('x')),
+                                               float(node[0].get('y')),
+                                               float(node[0].get('z')))
             elif node.tag == 'upvector':
                 self._up_vector = vector.Vector3D(float(node[0].get('x')),
                                                   float(node[0].get('y')),
