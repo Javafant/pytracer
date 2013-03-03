@@ -82,7 +82,7 @@ class Scene:
     def render(self, v_res):
         h_res = int(self.camera.aspect_ratio * v_res)
         outfile = Image.new('RGB', (h_res, v_res))
-        #pix = outfile.load()
+        pix = outfile.load()
         pixbuffer = []
 
         for x in range(0, h_res):
@@ -97,10 +97,10 @@ class Scene:
                          -self.camera.view_up *
                          self.camera.virtual_screen_height)
                 direction = pixel - self.camera.position
-                pixbuffer.append(self.send_ray(ray.Ray(pixel,
-                                                       direction)).get_color())
-                #pix[x, y] = self.send_ray(ray.Ray(pixel,
-                #                                  direction)).get_color()
+                #pixbuffer.append(self.send_ray(ray.Ray(pixel,
+                #                                       direction)).get_color())
+                pix[x, y] = self.send_ray(ray.Ray(pixel,
+                                                  direction)).get_color()
                 #pix((x, y), self.send_ray(ray.Ray(pixel,
                 #                                  direction)).get_color())
         outfile.putdata(pixbuffer)
