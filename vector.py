@@ -17,9 +17,11 @@ class Vector3D:
         self.y = y
         self.z = z
 
-    def normalize(self):
+    @property
+    def normalized(self):
         return self / self.length
 
+    @property
     def length(self):
         return math.sqrt(self.x * self.x +
                          self.y * self.y +
@@ -28,6 +30,10 @@ class Vector3D:
     def __mul__(self, a):
         return Vector3D(self.x*a, self.y*a, self.z*a)
 
+    def __rmul__(self, a):
+        return self * a
+
+
     def __str__(self):
         return "Vector3D(%g,%g,%g)" % (self.x, self.y, self.z)
 
@@ -35,3 +41,11 @@ class Vector3D:
         return Vector3D(self.x + a.x,
                         self.y + a.y,
                         self.z + a.z)
+
+    def __neg__(self):
+        return Vector3D(-self.x,
+                        -self.y,
+                        -self.z)
+
+    def __sub__(self, a):
+        return self + (-a)
