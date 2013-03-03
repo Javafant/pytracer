@@ -8,7 +8,7 @@ def parse(mat_node):
 
 
 class Material:
-    ''' it’s a material
+    ''' it's a material
     '''
 
     def __init__(self, node):

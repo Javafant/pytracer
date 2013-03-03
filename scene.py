@@ -12,7 +12,7 @@ import color
 
 
 class Scene:
-    ''' it’s a room … more or less
+    ''' it's a room ... more or less
     '''
     def __init__(self, file_path):
         scene_xml = ET.parse(file_path)
