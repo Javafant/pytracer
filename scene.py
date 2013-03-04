@@ -21,6 +21,7 @@ class Scene:
         self.objects = objects.parse(scene.find('objects'), self)
         self.lights = lights.parse(scene.find('lights'))
         self.background = color.parse(scene.find('background').find('color'))
+        #we forgot the defaul background
         self.ambient_light = color.parse(scene.find('ambient').find('color'))
         self.camera = camera.Camera(scene.find('camera'))
 
@@ -30,53 +31,70 @@ class Scene:
             :param Ray r: starpoint and direction
             :pram int recursion_level: how many light recursion
         '''
-        t_min = float('inf')
-        hit = None
-        for o in self.objects:
-        #find the closest object
-            t, tmp_point, tmp_normal = o.intersects(r)
-            if t < t_min:
-                t_min = t
-                hit = o
-                point = tmp_point
-                normal = tmp_normal
-                #normalvector
+        i = 0
+        myray = r
+        last_hit = None
+        #we don't need to check the the last object, we are comming from
+        black = color.RaytracerColor(0.0, 0.0, 0.0)
+        white = color.RaytracerColor(1.0, 1.0, 1.0)
+        ret_color = black
+        stacking_reflection = white
+        while i < recursion_level and (i == 0 or ((last_hit is not None))):
+        # and (last_hit.material.reflection_color <> black))
+            t_min = float('inf')
+            hit = None
+            new_color = self.background
+            for o in self.objects:
+            #find the closest object
+                if o != last_hit:
+                    t, tmp_point, tmp_normal = o.intersects(myray)
+                    if t < t_min:
+                        t_min = t
+                        hit = o
+                        point = tmp_point
+                        normal = tmp_normal
+                        #normalvector
 
-        if hit is not None:
-            new_color = color.dot(hit.material.ambient_color, self.ambient_light)
-            #a tiny base glow of everything
-            for ls in self.lights:
-            #check all ligths
-                if ls.is_visible_from_point(point, normal, self.objects):
-                #if the light is visibile from the point the ray hit
-                    light_direction = vector.dot(normal, ls.light_direction(point))
-                    if light_direction > 0:
-                    #if there is still light
-                        new_color += (color.dot(hit.material.diffuse_color,
-                                               ls.get_color(point)) *
-                                               light_direction)
+            if hit is not None:
+                new_color = color.dot(hit.material.ambient_color, self.ambient_light)
+                #a tiny base glow of everything
+                for ls in self.lights:
+                #check all ligths
+                    if ls.is_visible_from_point(point, normal, self.objects):
+                    #if the light is visibile from the point the ray hit
+                        light_direction = vector.dot(normal, ls.light_direction(point))
+                        if light_direction > 0:
+                        #if there is still light
+                            new_color += (color.dot(hit.material.diffuse_color,
+                                                   ls.get_color(point)) *
+                                                   light_direction)
 
-                        lr = -(2 * vector.dot(normal,
-                                              ls.light_direction(point)) *
-                                              normal -
-                                              ls.light_direction(point))
+                            lr = -(2 * vector.dot(normal,
+                                                  ls.light_direction(point)) *
+                                                  normal -
+                                                  ls.light_direction(point))
 
-                        new_color += (color.dot(hit.material.specular_color,
-                                      ls.get_color(point)) *
-                                      (vector.dot(lr, r.direction) /
-                                      (lr.length * r.direction.length)) **
-                                       hit.material.phong_specular_exponent)
+                            new_color += (color.dot(hit.material.specular_color,
+                                                    ls.get_color(point)) *
+                                                    (vector.dot(lr, myray.direction) /
+                                                     (lr.length * myray.direction.length)) **
+                                          hit.material.phong_specular_exponent)
+                #get the next ray
+                myray = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, myray.direction)) *
+                                                      normal - myray.direction))
+            if last_hit is not None:
+                #respect the reflectioncolor of the last element
+                #ret_color += color.dot(last_hit.material.reflection_color,
+                #                       new_color)
+                stacking_reflection = color.dot(last_hit.material.reflection_color, stacking_reflection)
+            #else:
+            #    ret_color = new_color
 
-            if recursion_level < 0:
-                return new_color
-
-            r2 = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, r.direction)) *
-                                                  normal - r.direction))
-            new_color += color.dot(hit.material.reflection_color,
-                                   self.send_ray(r2, recursion_level - 1))
-            return new_color
-        else:
-            return self.background
+            ret_color += color.dot(stacking_reflection,
+                                       new_color)
+            last_hit = hit
+            i += 1
+        return ret_color
 
     def render(self, v_res):
         h_res = int(self.camera.aspect_ratio * v_res)

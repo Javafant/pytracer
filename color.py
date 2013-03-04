@@ -62,5 +62,8 @@ class RaytracerColor:
         self._b *= a
         return self
 
+    def __ne__(self, a):
+        return not (self._r == a.r and self._g == a.g and self._b == a.b)
+
     def get_color(self):
         return (int(self._r*255), int(self._g*255), int(self._b*255))
