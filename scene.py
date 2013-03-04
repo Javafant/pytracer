@@ -37,10 +37,9 @@ class Scene:
         #we don't need to check the the last object, we are comming from
         black = color.RaytracerColor(0.0, 0.0, 0.0)
         white = color.RaytracerColor(1.0, 1.0, 1.0)
-        ret_color = black
+        ret_color = self.background
         stacking_reflection = white
-        while i < recursion_level and (i == 0 or ((last_hit is not None))):
-        # and (last_hit.material.reflection_color <> black))
+        while i < recursion_level and (i == 0 or ((last_hit is not None) and (stacking_reflection <> black)):
             t_min = float('inf')
             hit = None
             new_color = self.background
@@ -115,7 +114,7 @@ class Scene:
                          self.camera.virtual_screen_height)
                 direction = pixel - self.camera.position
                 #pixbuffer.append(self.send_ray(ray.Ray(pixel,
-                #                                       direction)).get_color())
+                #                                  direction)).get_color())
                 pix[x, y] = self.send_ray(ray.Ray(pixel,
                                                   direction)).get_color()
                 #pix((x, y), self.send_ray(ray.Ray(pixel,
