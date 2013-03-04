@@ -10,6 +10,8 @@ import ray
 
 import color
 
+import sys
+
 
 class Scene:
     ''' it's a room ... more or less
@@ -39,7 +41,7 @@ class Scene:
         white = color.RaytracerColor(1.0, 1.0, 1.0)
         ret_color = self.background
         stacking_reflection = white
-        while i < recursion_level and (i == 0 or ((last_hit is not None) and (stacking_reflection <> black)):
+        while i < recursion_level and (i == 0 or ((last_hit is not None) and (stacking_reflection != black))):
             t_min = float('inf')
             hit = None
             new_color = self.background
@@ -82,12 +84,7 @@ class Scene:
                 myray = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, myray.direction)) *
                                                       normal - myray.direction))
             if last_hit is not None:
-                #respect the reflectioncolor of the last element
-                #ret_color += color.dot(last_hit.material.reflection_color,
-                #                       new_color)
                 stacking_reflection = color.dot(last_hit.material.reflection_color, stacking_reflection)
-            #else:
-            #    ret_color = new_color
 
             ret_color += color.dot(stacking_reflection,
                                        new_color)
@@ -98,27 +95,25 @@ class Scene:
     def render(self, v_res):
         h_res = int(self.camera.aspect_ratio * v_res)
         outfile = Image.new('RGB', (h_res, v_res))
-        pix = outfile.load()
         pixbuffer = []
 
-        for x in range(0, h_res):
-            for y in range(0, v_res):
-                pixel = (self.camera.virtual_screen_top_left_corner +
-                         float(x) /
-                         float(h_res) *
-                         -self.camera.view_left *
-                         self.camera.virtual_screen_width +
-                         float(y) /
-                         float(v_res) *
-                         -self.camera.view_up *
-                         self.camera.virtual_screen_height)
+        wstep = 1.0 / float(h_res) * -self.camera.view_left * self.camera.virtual_screen_width
+        hstep = 1.0 / float(v_res) * -self.camera.view_up * self.camera.virtual_screen_height
+        pixel = self.camera.virtual_screen_top_left_corner
+        sys.stdout.write(str(0*100/v_res) + '%')
+        sys.stdout.flush()
+        for y in range(0, v_res):
+            sys.stdout.write('\r' + str(y*100/v_res) + '% rendered')
+            sys.stdout.flush()
+            pixel = (self.camera.virtual_screen_top_left_corner + y * hstep )
+            for x in range(0, h_res):
+                pixel += wstep
                 direction = pixel - self.camera.position
-                #pixbuffer.append(self.send_ray(ray.Ray(pixel,
-                #                                  direction)).get_color())
-                pix[x, y] = self.send_ray(ray.Ray(pixel,
-                                                  direction)).get_color()
-                #pix((x, y), self.send_ray(ray.Ray(pixel,
-                #                                  direction)).get_color())
+                pixbuffer.append(self.send_ray(ray.Ray(pixel,
+                                                  direction)).get_color())
+        sys.stdout.write('\rrendering completed\n')
+        sys.stdout.flush()
+        print('writing pixel buffer in image...')
         outfile.putdata(pixbuffer)
         return outfile
 
