@@ -40,8 +40,10 @@ class Scene:
         black = color.RaytracerColor(0.0, 0.0, 0.0)
         white = color.RaytracerColor(1.0, 1.0, 1.0)
         ret_color = self.background
-        stacking_reflection = white
-        while i < recursion_level and (i == 0 or ((last_hit is not None) and (stacking_reflection != black))):
+        reflexion_stack = white
+        while i < recursion_level and (i == 0 or
+                                       ((last_hit is not None) and
+                                        (reflexion_stack != black))):
             t_min = float('inf')
             hit = None
             new_color = self.background
@@ -57,37 +59,44 @@ class Scene:
                         #normalvector
 
             if hit is not None:
-                new_color = color.dot(hit.material.ambient_color, self.ambient_light)
+                new_color = color.dot(hit.material.ambient_color,
+                                      self.ambient_light)
                 #a tiny base glow of everything
                 for ls in self.lights:
                 #check all ligths
                     if ls.is_visible_from_point(point, normal, self.objects):
                     #if the light is visibile from the point the ray hit
-                        light_direction = vector.dot(normal, ls.light_direction(point))
+                        light_direction = vector.dot(normal,
+                                                     ls.light_direction(point))
                         if light_direction > 0:
                         #if there is still light
-                            new_color += (color.dot(hit.material.diffuse_color,
-                                                   ls.get_color(point)) *
-                                                   light_direction)
+                            #hm and md for line shortening
+                            hm = hit.material
+                            md = myray.direction
+                            new_color += (color.dot(hm.diffuse_color,
+                                                    ls.get_color(point)) *
+                                          light_direction)
 
                             lr = -(2 * vector.dot(normal,
                                                   ls.light_direction(point)) *
-                                                  normal -
-                                                  ls.light_direction(point))
+                                   normal -
+                                   ls.light_direction(point))
 
-                            new_color += (color.dot(hit.material.specular_color,
+                            new_color += (color.dot(hm.specular_color,
                                                     ls.get_color(point)) *
-                                                    (vector.dot(lr, myray.direction) /
-                                                     (lr.length * myray.direction.length)) **
-                                          hit.material.phong_specular_exponent)
+                                          (vector.dot(lr, md) /
+                                           (lr.length * md.length)) **
+                                          hm.phong_specular_exponent)
                 #get the next ray
-                myray = ray.Ray(point + 0.01 * normal, -(2 * (vector.dot(normal, myray.direction)) *
-                                                      normal - myray.direction))
+                myray = ray.Ray(point + 0.01 * normal,
+                                -(2 * (vector.dot(normal, myray.direction)) *
+                                  normal - myray.direction))
             if last_hit is not None:
-                stacking_reflection = color.dot(last_hit.material.reflection_color, stacking_reflection)
+                reflexion_stack = color.dot(last_hit.material.reflection_color,
+                                            reflexion_stack)
 
-            ret_color += color.dot(stacking_reflection,
-                                       new_color)
+            ret_color += color.dot(reflexion_stack,
+                                   new_color)
             last_hit = hit
             i += 1
         return ret_color
@@ -96,21 +105,22 @@ class Scene:
         h_res = int(self.camera.aspect_ratio * v_res)
         outfile = Image.new('RGB', (h_res, v_res))
         pixbuffer = []
-
-        wstep = 1.0 / float(h_res) * -self.camera.view_left * self.camera.virtual_screen_width
-        hstep = 1.0 / float(v_res) * -self.camera.view_up * self.camera.virtual_screen_height
+        wstep = (1.0 / float(h_res) *
+                 -self.camera.view_left * self.camera.virtual_screen_width)
+        hstep = (1.0 / float(v_res) *
+                 -self.camera.view_up * self.camera.virtual_screen_height)
         pixel = self.camera.virtual_screen_top_left_corner
         sys.stdout.write(str(0*100/v_res) + '%')
         sys.stdout.flush()
         for y in range(0, v_res):
             sys.stdout.write('\r' + str(y*100/v_res) + '% rendered')
             sys.stdout.flush()
-            pixel = (self.camera.virtual_screen_top_left_corner + y * hstep )
+            pixel = (self.camera.virtual_screen_top_left_corner + y * hstep)
             for x in range(0, h_res):
                 pixel += wstep
                 direction = pixel - self.camera.position
                 pixbuffer.append(self.send_ray(ray.Ray(pixel,
-                                                  direction)).get_color())
+                                                       direction)).get_color())
         sys.stdout.write('\rrendering completed\n')
         sys.stdout.flush()
         print('writing pixel buffer in image...')
