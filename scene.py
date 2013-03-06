@@ -1,5 +1,3 @@
-from PIL import Image
-
 import vector
 import ray
 
@@ -59,21 +57,22 @@ class Scene:
                 #check all ligths
                     if ls.is_visible_from_point(point, normal, self.objects):
                     #if the light is visibile from the point the ray hit
-                        light_direction = vector.dot(normal,
-                                                     ls.light_direction(point))
-                        if light_direction > 0:
+                        light_direction = ls.light_direction(point)
+                        light_scalar = vector.dot(normal,
+                                                  light_direction)
+                        if light_scalar > 0:
                         #if there is still light
                             #hm and md for line shortening
                             hm = hit.material
                             md = myray.direction
                             new_color += (color.dot(hm.diffuse_color,
                                                     ls.get_color(point)) *
-                                          light_direction)
+                                          light_scalar)
 
                             lr = -(2 * vector.dot(normal,
-                                                  ls.light_direction(point)) *
+                                                  light_direction) *
                                    normal -
-                                   ls.light_direction(point))
+                                   light_direction)
 
                             new_color += (color.dot(hm.specular_color,
                                                     ls.get_color(point)) *
@@ -95,16 +94,14 @@ class Scene:
         return ret_color
 
     def render(self, v_res):
-        h_res = int(self.camera.aspect_ratio * v_res)
-        outfile = Image.new('RGB', (h_res, v_res))
+        print('rendering started')
+        h_res = int(round(self.camera.aspect_ratio * v_res))
         pixbuffer = []
         wstep = (1.0 / float(h_res) *
                  -self.camera.view_left * self.camera.virtual_screen_width)
         hstep = (1.0 / float(v_res) *
                  -self.camera.view_up * self.camera.virtual_screen_height)
-        pixel = self.camera.virtual_screen_top_left_corner
-        sys.stdout.write(str(0*100/v_res) + '%')
-        sys.stdout.flush()
+
         for y in range(0, v_res):
             sys.stdout.write('\r' + str(y*100/v_res) + '% rendered')
             sys.stdout.flush()
@@ -114,11 +111,8 @@ class Scene:
                 direction = pixel - self.camera.position
                 pixbuffer.append(self.send_ray(ray.Ray(pixel,
                                                        direction)).get_color())
-        sys.stdout.write('\rrendering completed\n')
-        sys.stdout.flush()
-        print('writing pixel buffer in image...')
-        outfile.putdata(pixbuffer)
-        return outfile
+        print('rendering completed')
+        return pixbuffer
 
     def get_material_by_name(self, strName):
         '''
