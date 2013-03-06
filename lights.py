@@ -1,31 +1,4 @@
-import color
 import ray
-import vector
-
-
-def parse(lights_node):
-    lights = []
-    for node in lights_node:
-        lights.append(create_light_source(node))
-    return lights
-
-
-def create_light_source(light_node):
-    ''' creates a light source of the type
-        omnilight, parallellight, spotlight or falllight
-        :param light_node: a XML node that represents the light source
-        :raises: if name of light_node is not a known light type
-    '''
-    if light_node.tag == 'omnilight':
-        return OmniLightSource(light_node)
-    elif light_node.tag == 'parallellight':
-        return ParallelLightSource(light_node)
-    elif light_node.tag == 'spotlight':
-        return SpotLightSource(light_node)
-    elif light_node.tag == 'falllight':
-        return FalloffLightSource(light_node)
-    raise Exception("Error in create_light_source(): Unknown light type '" +
-                    light_node.tag + "'")
 
 
 class LightSource:
@@ -88,16 +61,10 @@ class ParallelLightSource(LightSource):
 
 
 class OmniLightSource(LightSource):
-    def __init__(self, light_node):
-        if light_node.get('name') is None:
-            raise Exception('Error in OmniLightSource(): no name define')
-        self._name = light_node.get('name')
-        if light_node.find('vector3d') is None:
-            raise Exception('Error in OmniLightSource(): no position defined')
-        self._position = vector.parse(light_node.find('vector3d'))
-        if light_node.find('color') is None:
-            raise Exception('Error in OmniLightSource(): no color defined')
-        self._color = color.parse(light_node.find('color'))
+    def __init__(self, name, position, color):
+        self._name = name
+        self._position = position
+        self._color = color
 
     def __str__(self):
         return ("FalloffLightSource: name = '" + self._name +

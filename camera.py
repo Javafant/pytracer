@@ -3,36 +3,18 @@ import vector
 
 
 class Camera:
-    def __init__(self, cam_node):
+    def __init__(self, position, target, up_vector,
+                 near_clipping, viewing_angle, aspect_ratio):
         '''
-            raises: if position, target or up vector is not set in XML file
+        Initializes the camera parameters
         '''
-        self._near_clipping = 1.0
-        self._viewing_angle = 22.5
-        self._aspect_ratio = 1.0
-        for node in cam_node:
-            if node.tag == 'position':
-                self._position = vector.Vector3D(float(node[0].get('x')),
-                                                 float(node[0].get('y')),
-                                                 float(node[0].get('z')))
-            elif node.tag == 'lookat':
-                self._target = vector.Vector3D(float(node[0].get('x')),
-                                               float(node[0].get('y')),
-                                               float(node[0].get('z')))
-            elif node.tag == 'upvector':
-                self._up_vector = vector.Vector3D(float(node[0].get('x')),
-                                                  float(node[0].get('y')),
-                                                  float(node[0].get('z')))
-            elif node.tag == 'options':
-                self._near_clipping = float(node.get('nearclipping'))
-                self._viewing_angle = float(node.get('fov'))
-                self._aspect_ratio = float(node.get('aspectratio'))
-        if self._position is None:
-            raise Exception("Error in Camera(): No position defined")
-        if self._target is None:
-            raise Exception("Error in Camera(): No target defined")
-        if self._up_vector is None:
-            raise Exception("Error in Camera(): No up vector defined")
+
+        self._position = position
+        self._target = target
+        self._up_vector = up_vector
+        self._near_clipping = near_clipping
+        self._viewing_angle = viewing_angle
+        self._aspect_ratio = aspect_ratio
 
     @property
     def viewing_direction(self):

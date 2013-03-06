@@ -7,12 +7,6 @@ def dot(a, b):
     return RaytracerColor(a.r * b.r, a.g * b.g, a.b * b.b)
 
 
-def parse(color_node):
-    return RaytracerColor(int(color_node.get('r'))/255.,
-                          int(color_node.get('g'))/255.,
-                          int(color_node.get('b'))/255.)
-
-
 class RaytracerColor:
     ''' represents a color
     '''

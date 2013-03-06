@@ -11,12 +11,6 @@ def cross(a, b):
                     a.x*b.y-a.y*b.x)
 
 
-def parse(vec_node):
-    return Vector3D(float(vec_node.get('x')),
-                    float(vec_node.get('y')),
-                    float(vec_node.get('z')))
-
-
 class Vector3D:
     def __init__(self, x, y, z):
         self.x = x

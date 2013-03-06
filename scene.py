@@ -1,11 +1,6 @@
-import xml.etree.ElementTree as ET
 from PIL import Image
 
 import vector
-import materials
-import lights
-import camera
-import objects
 import ray
 
 import color
@@ -16,16 +11,14 @@ import sys
 class Scene:
     ''' it's a room ... more or less
     '''
-    def __init__(self, file_path):
-        scene_xml = ET.parse(file_path)
-        scene = scene_xml.getroot()
-        self.materials = materials.parse(scene.find('materials'))
-        self.objects = objects.parse(scene.find('objects'), self)
-        self.lights = lights.parse(scene.find('lights'))
-        self.background = color.parse(scene.find('background').find('color'))
-        #we forgot the defaul background
-        self.ambient_light = color.parse(scene.find('ambient').find('color'))
-        self.camera = camera.Camera(scene.find('camera'))
+    def __init__(self, camera, objects, materials,
+                 lights, background, ambient_light):
+        self.camera = camera
+        self.objects = objects
+        self.materials = materials
+        self.lights = lights
+        self.background = background
+        self.ambient_light = ambient_light
 
     def send_ray(self, r, recursion_level=4):
     #does it make sense to set the recursion level per ray?
