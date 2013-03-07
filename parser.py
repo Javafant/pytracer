@@ -109,8 +109,8 @@ class Parser:
                 light = self._parse_parallel_light_source(light_node)
             elif light_node.tag == 'spotlight':
                 light = self._parse_spot_light_source(light_node)
-            elif light_node.tag == 'falllight':
-                light = FalloffLightSource(light_node)
+            elif light_node.tag == 'fallofflight':
+                light = self._parse_falloff_light_source(light_node)
             else:
                 raise Exception("Error in create_light_source():\
                                  Unknown light type '" +
@@ -160,6 +160,22 @@ class Parser:
             raise Exception('Error in SpotLightSource(): no color defined')
         color = self._parse_color(light_node.find('color'))
         return SpotLightSource(name, angle, position, target, color)
+
+    def _parse_falloff_light_source(self, light_node):
+        if light_node.get('name') is None:
+            raise Exception('Error in FallOfLightSource(): no name define')
+        name = light_node.get('name')
+        if light_node.get('factor') is None:
+            raise Exception('Error in FallOfLightSource(): no name define')
+        factor = float(light_node.get('factor'))
+        if light_node.find('vector3d') is None:
+            raise Exception('Error in FallOfLightSource():\
+                             no position defined')
+        position = self._parse_vector(light_node.find('vector3d'))
+        if light_node.find('color') is None:
+            raise Exception('Error in FallOfLightSource(): no color defined')
+        color = self._parse_color(light_node.find('color'))
+        return FalloffLightSource(name, factor, position, color)
 
     def _parse_vector(self, vector_node):
         return Vector3D(float(vector_node.get('x')),
