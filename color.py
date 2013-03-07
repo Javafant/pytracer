@@ -61,3 +61,9 @@ class RaytracerColor:
 
     def get_color(self):
         return (int(self._r*255), int(self._g*255), int(self._b*255))
+
+    @property
+    def sanitized(self):
+        return RaytracerColor(min(max(0.0, self._r), 1),
+                              min(max(0.0, self._g), 1),
+                              min(max(0.0, self._b), 1))

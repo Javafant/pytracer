@@ -62,7 +62,7 @@ class FalloffLightSource(LightSource):
             :param Vector3D p: ??
         '''
         return (self._color * self._factor *
-               (1.0 / (p - self._position).length ** 2))
+               (1.0 / (p - self._position).length ** 2)).sanitized
 
     def light_direction(self, p):
         ''' from p to the light source
