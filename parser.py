@@ -108,7 +108,7 @@ class Parser:
             elif light_node.tag == 'parallellight':
                 light = self._parse_parallel_light_source(light_node)
             elif light_node.tag == 'spotlight':
-                light = SpotLightSource(light_node)
+                light = self._parse_spot_light_source(light_node)
             elif light_node.tag == 'falllight':
                 light = FalloffLightSource(light_node)
             else:
@@ -142,6 +142,24 @@ class Parser:
             raise Exception('Error in ParallelLightSource(): no color defined')
         color = self._parse_color(light_node.find('color'))
         return ParallelLightSource(name, direction, color)
+
+    def _parse_spot_light_source(self, light_node):
+        if light_node.get('name') is None:
+            raise Exception('Error in SpotLightSource(): no name define')
+        name = light_node.get('name')
+        if light_node.get('angle') is None:
+            raise Exception('Error in SpotLightSource(): no angle defined')
+        angle = float(light_node.get('angle'))
+        if light_node.find('position') is None:
+            raise Exception('Error in SpotLightSource(): no position defined')
+        position = self._parse_vector(light_node.find('position')[0])
+        if light_node.find('target') is None:
+            raise Exception('Error in SpotLightSource(): no target defined')
+        target = self._parse_vector(light_node.find('target')[0])
+        if light_node.find('color') is None:
+            raise Exception('Error in SpotLightSource(): no color defined')
+        color = self._parse_color(light_node.find('color'))
+        return SpotLightSource(name, angle, position, target, color)
 
     def _parse_vector(self, vector_node):
         return Vector3D(float(vector_node.get('x')),
