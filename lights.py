@@ -17,7 +17,7 @@ class LightSource:
         ''' from p to the light source
             :param Vector3D p: ??
         '''
-        return (self._position - p).normalized
+        pass
 
     def is_visibible_from_point(self, point, normal, objects):
         '''
@@ -51,13 +51,30 @@ class SpotLightSource(LightSource):
 
 
 class ParallelLightSource(LightSource):
-    def __init__(self):
-        pass
+    def __init__(self, name, direction, color):
+        self._name = name
+        self._direction = direction
+        self._color = color
 
     def __str__(self):
-        return ("FalloffLightSource: name = '" + self._name +
-                "', position = " + self._position +
+        return ("ParallelLightSource: name = '" + self._name +
+                "', direction = " + self._direction +
                 ", color = " + self._color)
+
+    def light_direction(self, p):
+        ''' from p to the light source
+            :param Vector3D p: ??
+        '''
+        return -self._direction.normalized
+
+    def is_visible_from_point(self, point, normal, objects):
+        for o in objects:
+            tmp, tmp_point, tmp_normal = o.intersects(ray.Ray(point +
+                                                              0.01 * normal,
+                                                      -self._direction))
+            if tmp < float('inf'):
+                return False
+        return True
 
 
 class OmniLightSource(LightSource):
@@ -83,3 +100,9 @@ class OmniLightSource(LightSource):
             if tmp < float('inf'):
                 return False
         return True
+
+    def light_direction(self, p):
+        ''' from p to the light source
+            :param Vector3D p: ??
+        '''
+        return (self._position - p).normalized

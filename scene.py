@@ -111,7 +111,7 @@ class Scene:
                 direction = pixel - self.camera.position
                 pixbuffer.append(self.send_ray(ray.Ray(pixel,
                                                        direction)).get_color())
-        print('rendering completed')
+        print('\nrendering completed')
         return pixbuffer
 
     def get_material_by_name(self, strName):

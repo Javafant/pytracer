@@ -106,7 +106,7 @@ class Parser:
             if light_node.tag == 'omnilight':
                 light = self._parse_omni_light_source(light_node)
             elif light_node.tag == 'parallellight':
-                light = ParallelLightSource(light_node)
+                light = self._parse_parallel_light_source(light_node)
             elif light_node.tag == 'spotlight':
                 light = SpotLightSource(light_node)
             elif light_node.tag == 'falllight':
@@ -129,6 +129,19 @@ class Parser:
             raise Exception('Error in OmniLightSource(): no color defined')
         color = self._parse_color(light_node.find('color'))
         return OmniLightSource(name, position, color)
+
+    def _parse_parallel_light_source(self, light_node):
+        if light_node.get('name') is None:
+            raise Exception('Error in ParallelLightSource(): no name define')
+        name = light_node.get('name')
+        if light_node.find('vector3d') is None:
+            raise Exception('Error in ParallelLightSource():\
+                             no position defined')
+        direction = self._parse_vector(light_node.find('vector3d'))
+        if light_node.find('color') is None:
+            raise Exception('Error in ParallelLightSource(): no color defined')
+        color = self._parse_color(light_node.find('color'))
+        return ParallelLightSource(name, direction, color)
 
     def _parse_vector(self, vector_node):
         return Vector3D(float(vector_node.get('x')),
